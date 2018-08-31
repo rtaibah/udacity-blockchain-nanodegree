@@ -133,5 +133,3 @@ function getBlockHeightFromDB() {
 }
 
 let blockchain = new Blockchain();
-
-module.exports = Blockchain;

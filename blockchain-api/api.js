@@ -14,8 +14,15 @@ app.use(morgan('combined'));
 app.use(bodyParser.json({type: '*/*'}));
 
 // Routes
-app.get('/', (req, res, next) => {
-  res.send(Blockchain.Blockchain.getBlock(0));
+app.get('/block/:block', (req, res, next) => {
+  let block = Blockchain.getBlock(req.params.block)
+  block.then(function(result) {
+    res.send(result);
+  })
+});
+
+app.put('/post', (req, res, next) => {
+  let addBlock = Blockchain.addBlock(req)
 });
 
 
