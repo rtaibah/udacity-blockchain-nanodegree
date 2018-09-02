@@ -24,12 +24,13 @@ npm install
 npm run dev
 ```
 
+This will run the server on `http://localhost:3090` and automatically generate 10 blocks.
+
 ### Endpoints
 
 #### Get Block Endpoint
 
-To get get block at _n_ height
-
+To get get block at _n_ height 
 ```
 curl "http://localhost:3090/block/n"
 ```

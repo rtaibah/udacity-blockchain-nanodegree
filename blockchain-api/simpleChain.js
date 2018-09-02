@@ -133,3 +133,11 @@ function getBlockHeightFromDB() {
 }
 
 module.exports = new Blockchain();
+
+(function theLoop (i) {
+  setTimeout(function () {
+    let blockchain = new Blockchain()
+    blockchain.addBlock(new Block('Testing data'));
+    if (--i) theLoop(i);
+  }, 100);
+})(10);
