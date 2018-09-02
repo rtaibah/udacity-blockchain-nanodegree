@@ -10,6 +10,8 @@ These instructions will get you a copy of the project up and running on your loc
 
 Installing Node and NPM is pretty straightforward using the installer package available from the (Node.js® web site)[https://nodejs.org/en/].
 
+This uses [ExpressJS](https://expressjs.com) which will be installed when running `npm install`. See configuration section below.
+
 ### Configuring your project
 
 - Install requirements
