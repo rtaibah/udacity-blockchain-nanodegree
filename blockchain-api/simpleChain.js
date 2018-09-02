@@ -132,9 +132,4 @@ function getBlockHeightFromDB() {
     })
 }
 
-let blockchain = new Blockchain()
-
-module.exports = {
-  getBlock: blockchain.getBlock,
-  addBlock: blockchain.addBlock,
-}
+module.exports = new Blockchain();

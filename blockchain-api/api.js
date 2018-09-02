@@ -2,8 +2,7 @@ const express = require('express');
 const http = require('http');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-const getBlock = require('./simpleChain').getBlock;
-const addBlock = require('./simpleChain').addBlock;
+const Blockchain = require('./simpleChain')
 const Block = require('./block')
 
 // App setup
@@ -17,7 +16,7 @@ app.use(bodyParser.json({type: '*/*'}));
 
 // Routes
 app.get('/block/:block', (req, res, next) => {
-  let block = getBlock(req.params.block)
+  let block = Blockchain.getBlock(req.params.block)
   block.then(function(result) {
     res.send(JSON.parse(result));
   })
@@ -25,7 +24,7 @@ app.get('/block/:block', (req, res, next) => {
 
 app.post('/block', (req, res) => {
   console.log(req.body)
-  let add = addBlock(new Block(req.body))
+  let add = Blockchain.addBlock(new Block(req.body))
   add.then(function(result) {
     res.send(result);
   })

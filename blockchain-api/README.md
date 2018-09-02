@@ -12,15 +12,34 @@ Installing Node and NPM is pretty straightforward using the installer package av
 
 ### Configuring your project
 
-- Use NPM to initialize your project and create package.json to store project dependencies.
+- Install requirements
+
 ```
-npm init
+npm install 
 ```
-- Install crypto-js with --save flag to save dependency to our package.json file
+
+- Run server
+
 ```
-npm install crypto-js --save
+npm run dev
 ```
-- Install level with --save flag
+
+### Endpoints
+
+#### Get Block Endpoint
+
+To get get block at _n_ height
+
 ```
-npm install level --save
+curl "http://localhost:3090/block/n"
+```
+
+#### Post Block Endpoint
+
+```
+curl -X "POST" "http://localhost:3090/block" \
+  -H 'Content-Type: application/json' \
+  -d $'{
+    "body": "Testing block with test string data"
+  }'
 ```
