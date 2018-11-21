@@ -1,0 +1,63 @@
+const express = require('express');
+const http = require('http');
+const morgan = require('morgan');
+const bodyParser = require('body-parser');
+const Blockchain = require('./simpleChain')
+const Block = require('./block')
+const StarValidation = require('./starValidation')
+
+// App setup
+const app = express();
+
+// Logging incoming requests
+app.use(morgan('combined'));
+
+// Parse incoming requests
+app.use(bodyParser.json({type: '*/*'}));
+
+validateAddressParameter = async (req, res, next) => {
+  try {
+    const starValidation = new StarValidation(req)
+    starValidation.validateAddressParameter()
+    next()
+  } catch (error) {
+    res.status(400).json({
+      status: 400,
+      message: error.message
+    })
+  }
+}
+
+// Routes
+app.get('/block/:block', (req, res, next) => {
+  let block = Blockchain.getBlock(req.params.block)
+  block.then(function(result) {
+    res.send(JSON.parse(result));
+  })
+});
+
+app.post('/block', (req, res) => {
+  let add = Blockchain.addBlock(new Block(req.body))
+  add.then(function(result) {
+    res.send(result);
+  })
+});
+
+app.post('/requestValidation', [validateAddressParameter], async (req, res) => {
+  const starValidation = new StarValidation(req)
+  const address = req.body.address
+
+  try {
+    data = await starValidation.getPendingAddressRequest(address)
+  } catch (error) {
+    data = await starValidation.saveNewRequestValidation(address)
+  }
+
+  res.json(data)
+})
+
+// Server setup
+const port = process.env.PORT || 8000;
+const server = http.createServer(app);
+server.listen(port);
+console.log("Server listening on port ", port);
