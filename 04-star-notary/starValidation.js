@@ -20,6 +20,55 @@ class StarValidation {
     return true;
   }
 
+  validateNewStarRequest() {
+    // Some variable deconstructions
+    const { star } = this.req.body;
+    const { dec, ra, story } = star;
+
+    // check if there is an address
+    if (!this.validateAddressParameter() || !star) {
+      throw new Error(
+        'No address or parameters. Please make sure you enter these values!',
+      );
+    }
+
+    // Check if star information is valid
+    if (
+      typeof dec !== 'string' ||
+      dec.length === 0 ||
+      typeof ra !== 'string' ||
+      ra.length === 0 ||
+      typeof story !== 'string' ||
+      story.length === 0 ||
+      story.length > 500
+    ) {
+      throw new Error('Your star information is invalid');
+    }
+
+    // Check if story is ascii
+    const isASCII = ((str) => {
+        return /^[\x00-\x7F]*$/.test(str);
+    })
+
+    if (!isASCII(story)) {throw new Error('Your story is not ASCII, please fix that')}
+  }
+
+  isValid() {
+    // return value from db
+    return db.get(this.req.body.address).then(value => {
+      value = JSON.parse(value);
+      if (value.messageSignature === 'valid') {
+        return 'valid';
+      } else {
+        return 'invalid';
+      }
+    });
+  }
+
+  invalidate() {
+    // delete address from db
+  }
+
   saveNewRequestValidation(address) {
     const timestamp = Date.now();
     const message = `${address}:${timestamp}:starRegistry`;
@@ -45,13 +94,13 @@ class StarValidation {
           return reject(err);
         }
         value = JSON.parse(value);
-        // Check if messageSignature is valid
+        // Check if messageSignature object exists or is valid
         if (value.messageSignature === 'valid') {
           return resolve({
             registerStar: true,
             status: value,
           });
-          // Check if registeration window has not expired
+          // If messageSignature is false or does not exist, move on. Check if  registeration window has not expired
         } else {
           const underFiveMinutes = Date.now() - 5 * 60 * 1000;
           const isExpired = value.requestTimeStamp < underFiveMinutes;
@@ -61,11 +110,13 @@ class StarValidation {
             value.validationWindow = 0;
             value.messageSignature = 'Validation window expired';
           } else {
-            // Check if message signature is valid
+            // If registration window has not expired, check if message signature is valid
+            // set new validation window
             value.validationWindow = Math.floor(
               (value.requestTimeStamp - underFiveMinutes) / 1000,
             );
             try {
+              // Check message signature
               isValid = bitcoinMessage.verify(
                 value.message,
                 address,
@@ -74,6 +125,7 @@ class StarValidation {
             } catch (err) {
               isValid = false;
             }
+            // Set isValid
             value.messageSignature = isValid ? 'valid' : 'invalid';
           }
           db.put(address, JSON.stringify(value));

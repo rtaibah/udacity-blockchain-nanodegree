@@ -41,6 +41,19 @@ validateSignatureParameter = async (req, res, next) => {
   }
 };
 
+validateNewStarRequest = async (req, res, next) => {
+  try {
+    const starValidation = new StarValidation(req);
+    starValidation.validateNewStarRequest();
+    next();
+  } catch (error) {
+    res.status(400).json({
+      status: 400,
+      message: error.message,
+    });
+  }
+};
+
 // Routes
 app.get('/block/:block', (req, res, next) => {
   let block = Blockchain.getBlock(req.params.block);
@@ -49,11 +62,19 @@ app.get('/block/:block', (req, res, next) => {
   });
 });
 
-app.post('/block', (req, res) => {
-  let add = Blockchain.addBlock(new Block(req.body));
-  add.then(function(result) {
-    res.send(result);
-  });
+app.post('/block', [validateNewStarRequest], async (req, res) => {
+  const starValidation = new StarValidation(req);
+  const isValid = await starValidation.isValid()
+  starValidation.validateNewStarRequest()
+  //check if request is valid
+  try {
+  } catch(error){
+  }
+
+  //let add = Blockchain.addBlock(new Block(req.body));
+  //add.then(function(result) {
+  //res.send(result);
+  //});
 });
 
 app.post('/requestValidation', [validateAddressParameter], async (req, res) => {
