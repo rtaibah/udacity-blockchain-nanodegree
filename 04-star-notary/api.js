@@ -71,10 +71,10 @@ app.post('/block', [validateNewStarRequest], async (req, res) => {
   } catch(error){
   }
 
-  //let add = Blockchain.addBlock(new Block(req.body));
-  //add.then(function(result) {
-  //res.send(result);
-  //});
+  let add = Blockchain.addBlock(new Block(req.body));
+  add.then(function(result) {
+  res.send(result);
+  });
 });
 
 app.post('/requestValidation', [validateAddressParameter], async (req, res) => {
