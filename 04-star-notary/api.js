@@ -58,26 +58,25 @@ validateNewStarRequest = async (req, res, next) => {
 
 app.post('/block', [validateNewStarRequest], async (req, res) => {
   const starValidation = new StarValidation(req);
-  const isValid = await starValidation.isValid()
-  starValidation.validateNewStarRequest()
+  const isValid = await starValidation.isValid();
+  starValidation.validateNewStarRequest();
   //check if request is valid
   try {
-    if (!isValid){
-      throw new Error('There was an error')
+    if (!isValid) {
+      throw new Error('There was an error');
     }
-    
-
-  } catch(error){
+  } catch (error) {
     res.status(400).json({
       status: 400,
       message: error.message,
     });
-  return
+    return;
   }
 
   let add = Blockchain.addBlock(new Block(req.body));
   add.then(function(result) {
-  res.send(result);
+    starValidation.invalidate(req.body.address);
+    res.status(201).send(result)
   });
 });
 
@@ -86,11 +85,9 @@ app.get('/block/:block', async (req, res, next) => {
   res.json(block);
 });
 
-app.get('/stars/address:address', async (req, res) => {
-})
+app.get('/stars/address:address', async (req, res) => {});
 
-app.get('/stars/hash:hash', async (req, res) => {
-})
+app.get('/stars/hash:hash', async (req, res) => {});
 
 app.post('/requestValidation', [validateAddressParameter], async (req, res) => {
   const starValidation = new StarValidation(req);
@@ -136,4 +133,3 @@ const port = process.env.PORT || 8000;
 const server = http.createServer(app);
 server.listen(port);
 console.log('Server listening on port ', port);
-

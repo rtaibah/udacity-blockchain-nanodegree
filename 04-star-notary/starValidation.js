@@ -65,8 +65,9 @@ class StarValidation {
     });
   }
 
-  invalidate() {
+  invalidate(address) {
     // delete address from db
+    db.del(address)
   }
 
   saveNewRequestValidation(address) {
