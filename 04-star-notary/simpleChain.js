@@ -26,7 +26,7 @@ class Blockchain{
     // previous block hash
     if(newBlock.height>0){
       const previousBlockHeight = newBlock.height - 1 
-      const previousBlock = JSON.parse(await this.getBlock(previousBlockHeight))
+      const previousBlock = await this.getBlock(previousBlockHeight)
       newBlock.previousBlockHash = previousBlock.hash 
     }
     // Block hash with SHA256 using newBlock and converting to a string
@@ -43,7 +43,12 @@ class Blockchain{
   // get block
   async getBlock(blockHeight){
     // return object as a single string
-    return await getBlockFromDB(blockHeight);
+    let block = await getBlockFromDB(blockHeight);
+    block = JSON.parse(block)
+    if (blockHeight > 0) {
+      block.body.star.storyDecoded = new Buffer(block.body.star.story).toString('hex')
+    }
+    return block
   }
 
   // validate block
