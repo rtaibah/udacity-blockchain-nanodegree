@@ -75,12 +75,9 @@ app.post('/block', [validateNewStarRequest], async (req, res) => {
   return
   }
 
-  console.log("Body is: ",req.body)
-
-
   let add = Blockchain.addBlock(new Block(req.body));
   add.then(function(result) {
-     res.status(201).send(result)
+  res.send(result);
   });
 });
 
