@@ -90,7 +90,10 @@ app.get('/stars/address:address', async (req, res) => {
   res.json(response);
 });
 
-app.get('/stars/hash:hash', async (req, res) => {});
+app.get('/stars/hash:hash', async (req, res) => {
+  let response = await Blockchain.getBlockByHash(req.params.hash.slice(1));
+  res.json(response)
+});
 
 app.post('/requestValidation', [validateAddressParameter], async (req, res) => {
   const starValidation = new StarValidation(req);
