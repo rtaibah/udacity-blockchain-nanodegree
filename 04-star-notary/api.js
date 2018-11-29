@@ -80,12 +80,15 @@ app.post('/block', [validateNewStarRequest], async (req, res) => {
   });
 });
 
-app.get('/block/:block', async (req, res, next) => {
+app.get('/block/:block', async (req, res) => {
   let block = await Blockchain.getBlock(req.params.block);
   res.json(block);
 });
 
-app.get('/stars/address:address', async (req, res) => {});
+app.get('/stars/address:address', async (req, res) => {
+  let response = await Blockchain.getBlockByAddress(req.params.address.slice(1));
+  res.json(response);
+});
 
 app.get('/stars/hash:hash', async (req, res) => {});
 
