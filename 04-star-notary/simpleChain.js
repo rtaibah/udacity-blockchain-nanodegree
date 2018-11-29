@@ -90,10 +90,12 @@ class Blockchain {
         .createReadStream()
         .on('data', data => {
           block = JSON.parse(data.value);
-          if (block.hash === hash) {
+          if (block.hash === hash && block.height > 0) {
             block.body.star.storyEncoded = new Buffer(
               block.body.star.story,
             ).toString('hex');
+            return resolve(block);
+          } else {
             return resolve(block);
           }
         })
