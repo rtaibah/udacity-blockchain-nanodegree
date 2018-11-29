@@ -26,23 +26,80 @@ npm install
 npm run dev
 ```
 
-This will run the server on `http://localhost:3090` and automatically generate 10 blocks.
-
 ### Endpoints
 
-#### Get Block Endpoint
+#### ID Validation Request 
 
-To get get block at _n_ height 
-```
-curl "http://localhost:3090/block/n"
-```
+##### Method
+    POST
 
-#### Post Block Endpoint
+##### Endpoint
+    http://localhost:8000/requestValidation
 
-```
-curl -X "POST" "http://localhost:3090/block" \
-  -H 'Content-Type: application/json' \
-  -d $'{
-    "body": "Testing block with test string data"
-  }'
-```
+##### Paramaters
+    address - a valid bitcoin address
+
+#### ID Signature Validation 
+
+##### Method
+    POST
+
+##### Endpoint
+    http://localhost:8000/message-signature/validate
+
+##### Paramaters
+    address - a valid bitcoin address
+    signature - a valid signed message using address and message from last step
+
+#### Star Registration 
+
+##### Method
+    POST
+
+##### Endpoint
+    http://localhost:8000/message-signature/validate
+
+##### Paramaters
+    address - a valid bitcoin address
+    star - Containing dec, ra and story (max 500 bytes)
+
+#### Get block by height 
+
+##### Method
+    GET
+
+##### Endpoint
+    http://localhost:8000/block/:height
+
+##### Paramaters
+    height- block height
+
+#### Get block by address 
+
+##### Method
+    GET
+
+##### Endpoint
+    http://localhost:8000/stars/address:address
+
+##### Paramaters
+    address - address used for registration
+
+#### Get block by hash
+
+##### Method
+    GET
+
+##### Endpoint
+    http://localhost:8000/stars/hash:hash
+
+##### Paramaters
+    hash - hash of the block
+
+#### Code of honor
+
+Credits for resources that helped me finish the project:
+
+- [ibrunotome](https://github.com/ibrunotome/udacity-blockchain-developer-nanodegree/tree/master/project4) from github, whose implementation of this project guided me along the way.
+- Udacity project 4 concepts section
+- Stack Overflow [conversion to hex](https://stackoverflow.com/questions/20580045/javascript-character-ascii-to-hex) question
