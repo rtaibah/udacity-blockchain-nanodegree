@@ -100,6 +100,6 @@ npm run dev
 
 Credits for resources that helped me finish the project:
 
-- [ibrunotome](https://github.com/ibrunotome/udacity-blockchain-developer-nanodegree/tree/master/project4) from github, whose implementation of this project guided me along the way.
+- [ibrunotome](https://github.com/ibrunotome/udacity-blockchain-developer-nanodegree/tree/master/project4) from github, whose implementation of this project guided me along the way. I used some of ibrunotome's code as helper code especially with using express.js framework concepts.
 - Udacity project 4 concepts section
 - Stack Overflow [conversion to hex](https://stackoverflow.com/questions/20580045/javascript-character-ascii-to-hex) question
