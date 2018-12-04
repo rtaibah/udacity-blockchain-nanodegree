@@ -58,10 +58,10 @@ validateNewStarRequest = async (req, res, next) => {
 
 app.post('/block', [validateNewStarRequest], async (req, res) => {
   const starValidation = new StarValidation(req);
-  const isValid = await starValidation.isValid();
   starValidation.validateNewStarRequest();
   //check if request is valid
   try {
+      const isValid = await starValidation.isValid();
     if (!isValid) {
       throw new Error('There was an error');
     }
@@ -73,11 +73,9 @@ app.post('/block', [validateNewStarRequest], async (req, res) => {
     return;
   }
 
-  let add = Blockchain.addBlock(new Block(req.body));
-  add.then(function(result) {
-    starValidation.invalidate(req.body.address);
-    res.status(201).send(result)
-  });
+  let add = await Blockchain.addBlock(new Block(req.body));
+  starValidation.invalidate(req.body.address);
+  res.json(add)
 });
 
 app.get('/block/:block', async (req, res) => {

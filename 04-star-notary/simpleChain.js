@@ -35,6 +35,8 @@ class Blockchain {
     newBlock.hash = SHA256(JSON.stringify(newBlock)).toString();
     // Adding block object to chain
     await addBlockToDB(newBlock.height, JSON.stringify(newBlock));
+    //console.log(newBlock)
+    return newBlock;
   }
 
   // get block
@@ -89,21 +91,20 @@ class Blockchain {
       db
         .createReadStream()
         .on('data', data => {
-          block = JSON.parse(data.value);
-          if (block.hash === hash && block.height > 0) {
-            block.body.star.storyEncoded = new Buffer(
-              block.body.star.story,
-            ).toString('hex');
-            return resolve(block);
-          } else {
-            return resolve(block);
+            block = JSON.parse(data.value);
+          if (block.hash === hash) {
+            if (!data.key === 0){
+              block.body.star.storyEncoded = new Buffer(
+                block.body.star.story,
+              ).toString('hex');
+              return resolve(block);
+            } else {return resolve(block)}
           }
         })
         .on('error', error => {
           return reject(error);
         })
         .on('close', () => {
-          return reject('Not found');
         });
     });
   }
