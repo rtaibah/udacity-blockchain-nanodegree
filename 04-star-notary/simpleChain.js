@@ -95,10 +95,10 @@ class Blockchain {
         .on('data', data => {
           block = JSON.parse(data.value);
           if (block.hash === hash) {
-            if (!data.key === 0) {
-              block.body.star.storyEncoded = new Buffer(
-                block.body.star.story,
-                'hex',
+            console.log(data.key);
+            if (data.key != 0) {
+              block.body.star.storyDecoded = new Buffer(
+                block.body.star.story,'hex'
               ).toString();
               return resolve(block);
             } else {
