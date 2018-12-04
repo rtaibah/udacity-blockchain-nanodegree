@@ -61,7 +61,7 @@ app.post('/block', [validateNewStarRequest], async (req, res) => {
   starValidation.validateNewStarRequest();
   //check if request is valid
   try {
-      const isValid = await starValidation.isValid();
+    const isValid = await starValidation.isValid();
     if (!isValid) {
       throw new Error('There was an error');
     }
@@ -73,9 +73,19 @@ app.post('/block', [validateNewStarRequest], async (req, res) => {
     return;
   }
 
+  const body = ({ address, star } = req.body);
+  const story = star.story;
+  body.star = {
+    dec: star.dec,
+    ra: star.ra,
+    story: new Buffer(story).toString('hex'),
+    mag: star.mag,
+    con: star.con,
+  };
+
   let add = await Blockchain.addBlock(new Block(req.body));
   starValidation.invalidate(req.body.address);
-  res.json(add)
+  res.json(add);
 });
 
 app.get('/block/:block', async (req, res) => {
@@ -84,13 +94,15 @@ app.get('/block/:block', async (req, res) => {
 });
 
 app.get('/stars/address:address', async (req, res) => {
-  let response = await Blockchain.getBlockByAddress(req.params.address.slice(1));
+  let response = await Blockchain.getBlockByAddress(
+    req.params.address.slice(1),
+  );
   res.json(response);
 });
 
 app.get('/stars/hash:hash', async (req, res) => {
   let response = await Blockchain.getBlockByHash(req.params.hash.slice(1));
-  res.json(response)
+  res.json(response);
 });
 
 app.post('/requestValidation', [validateAddressParameter], async (req, res) => {

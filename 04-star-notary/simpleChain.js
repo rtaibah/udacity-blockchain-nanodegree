@@ -45,9 +45,10 @@ class Blockchain {
     let block = await getBlockFromDB(blockHeight);
     block = JSON.parse(block);
     if (blockHeight > 0) {
-      block.body.star.storyDecoded = new Buffer(block.body.star.story).toString(
+      block.body.star.storyDecoded = new Buffer(
+        block.body.star.story,
         'hex',
-      );
+      ).toString();
     }
     return block;
   }
@@ -68,9 +69,10 @@ class Blockchain {
         .on('data', data => {
           block = JSON.parse(data.value);
           if (block.body.address === address) {
-            block.body.star.storyEncoded = new Buffer(
+            block.body.star.storyDecoded = new Buffer(
               block.body.star.story,
-            ).toString('hex');
+              'hex',
+            ).toString();
             blocks.push(block);
           }
         })
@@ -91,21 +93,23 @@ class Blockchain {
       db
         .createReadStream()
         .on('data', data => {
-            block = JSON.parse(data.value);
+          block = JSON.parse(data.value);
           if (block.hash === hash) {
-            if (!data.key === 0){
+            if (!data.key === 0) {
               block.body.star.storyEncoded = new Buffer(
                 block.body.star.story,
-              ).toString('hex');
+                'hex',
+              ).toString();
               return resolve(block);
-            } else {return resolve(block)}
+            } else {
+              return resolve(block);
+            }
           }
         })
         .on('error', error => {
           return reject(error);
         })
-        .on('close', () => {
-        });
+        .on('close', () => {});
     });
   }
 
