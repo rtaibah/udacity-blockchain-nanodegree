@@ -6,9 +6,13 @@ contract('StarNotary', accounts => {
   const ra = 'ra_01.37.42.84548';
   const dec = 'dec_-57.14.12.3101';
   const mag = 'mag_0.40-.46';
+
+  const tokenId = 1;
+
+  let defaultAccount = accounts[0]
   let user1 = accounts[1];
   let user2 = accounts[2];
-  const tokenId = 1;
+
   let starPrice = web3.utils.toWei('.01', 'ether');
 
   beforeEach(async function() {
@@ -69,15 +73,26 @@ contract('StarNotary', accounts => {
 
   // mint test
   describe('check if mint method works', () => {
-    it('it mints properly!', async function () {
-      beforeEach(async function (){
-        tx = await this.contract.mint(tokenId, {from: user1})
-        it('assigned token to correct user'), async function (){
-          let owner = await this.contract.ownerOf(tokenId, {from: user1})
-          assert.equal(owner, user1)
-        }
-      })
+    let tx
+
+    beforeEach(async function() {
+     tx = await this.contract.mint(user1, tokenId, {from: defaultAccount})
+    })
+
+    it('assigned token to correct user', async function (){
+      var owner = await this.contract.ownerOf(tokenId, {from: defaultAccount})
+      assert.equal(owner, defaultAccount)
     });
   });
 
+  // getApproved test
+  describe('Check for Approvals', () => {
+    it('get approved tests', async function () {
+      let from = user1
+      let to = user2
+      await this.contract.createStar(name, starStory, ra, dec, mag, {from: from});
+      tx = await this.contract.approve(user2, tokenId, {from: from})
+      assert.equal(await this.contract.getApproved(tokenId, {from: from}), to)
+    });
+  });
 });
