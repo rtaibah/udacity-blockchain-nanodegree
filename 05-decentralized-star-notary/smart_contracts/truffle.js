@@ -1,7 +1,7 @@
 var HDWalletProvider = require('truffle-hdwallet-provider');
 
-const mnemonic = 'tourist nominee average cactus enhance elder bulb satisfy gesture cement learn fog';
-const infura = 'https://rinkeby.infura.io/v3/2ae5cedc02454113b8b02a522013726b'
+const mnemonic = 'jelly gun feel polar kangaroo social elevator chaos soap dose cage lesson';
+const infura = 'https://rinkeby.infura.io/v3/faef7cbe49c54cd9b1925cd338647f2d'
 
 module.exports = {
   compilers: {
