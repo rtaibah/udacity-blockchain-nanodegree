@@ -17,3 +17,7 @@ A node based API that interacts with the the private blockchain.
 ### 4. Build a Private Blockchain Notary Service ✅
 
 Utilizing your existing web API, you will create a star registry notarization service.
+
+### 5. Decentralized Star Notary Service ✅
+
+A star notary DApp with a smart contract and deployed on the public testnet.
